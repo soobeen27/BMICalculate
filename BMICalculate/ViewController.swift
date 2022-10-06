@@ -40,7 +40,7 @@ final class ViewController: UIViewController {
         let tf = UITextField()
         tf.backgroundColor = .white
 //        tf.keyboardType = .numberPad
-        tf.returnKeyType = .next    
+//        tf.returnKeyType = .
         
         tf.layer.cornerRadius = 5
         tf.clipsToBounds = true
@@ -50,7 +50,7 @@ final class ViewController: UIViewController {
         let tf = UITextField()
         tf.backgroundColor = .white
 //        tf.keyboardType = .numberPad
-        tf.returnKeyType = .done
+//        tf.returnKeyType = .done
         tf.layer.cornerRadius = 5
         tf.clipsToBounds = true
         return tf
@@ -102,6 +102,8 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        heightTextField.delegate = self
+        weightTextField.delegate = self
         setUI()
     }
     
@@ -129,6 +131,7 @@ final class ViewController: UIViewController {
             mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             mainStackView.heightAnchor.constraint(equalToConstant: (viewHeight * 3) + 40),
             
+            
             heightLabel.widthAnchor.constraint(equalToConstant: 70),
             weightLabel.widthAnchor.constraint(equalToConstant: 70),
             
@@ -143,8 +146,19 @@ final class ViewController: UIViewController {
     @objc func calculateButtonTapped() {
         let nextVC = CalculatedViewController()
         
+        guard let h = heightTextField.text, let w = weightTextField.text else {return}
+        guard let h2 = Int(h), let w2 = Int(w) else {return}
+        print(h2,w2)
+        nextVC.bmi = Float(bmiCalculate(height: h2, weight: w2))
+
         nextVC.modalPresentationStyle = .fullScreen
         present(nextVC, animated: true)
+    }
+    
+    func bmiCalculate(height: Int, weight: Int) -> Float {
+        let h = Float(height) / 100
+        print(h)
+        return Float(weight) / (h * h)
     }
     
 }
