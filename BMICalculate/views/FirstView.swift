@@ -1,14 +1,13 @@
 //
-//  ViewController.swift
+//  firstView.swift
 //  BMICalculate
 //
-//  Created by Soo Jang on 2022/09/30.
+//  Created by Soo Jang on 2022/10/07.
 //
 
 import UIKit
 
-final class ViewController: UIViewController {
-    
+class FirstView: UIView {
     private let mainLabel: UILabel = {
         let label = UILabel()
         label.text = "키와 몸무게를 입력해주세요"
@@ -36,21 +35,17 @@ final class ViewController: UIViewController {
         return label
     }()
     
-    private let heightTextField: UITextField = {
+    let heightTextField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
-//        tf.keyboardType = .numberPad
-//        tf.returnKeyType = .
-        
         tf.layer.cornerRadius = 5
         tf.clipsToBounds = true
         return tf
     }()
-    private let weightTextField: UITextField = {
+    let weightTextField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = .white
-//        tf.keyboardType = .numberPad
-//        tf.returnKeyType = .done
+
         tf.layer.cornerRadius = 5
         tf.clipsToBounds = true
         return tf
@@ -86,7 +81,7 @@ final class ViewController: UIViewController {
         return st
     }()
     
-    private lazy var calculateButton: UIButton = {
+    lazy var calculateButton: UIButton = {
         let button = UIButton()
         button.layer.cornerRadius = 5
         button.clipsToBounds = true
@@ -94,23 +89,28 @@ final class ViewController: UIViewController {
         button.backgroundColor = .blue
         button.tintColor = .white
         button.titleLabel?.font = .boldSystemFont(ofSize: 20)
-        button.addTarget(self, action: #selector(calculateButtonTapped), for: .touchUpInside)
+//        button.addTarget(self, action: #selector(calculateButtonTapped), for: .touchUpInside)
         return button
     }()
     
     let viewHeight: CGFloat = 35
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        heightTextField.delegate = self
-        weightTextField.delegate = self
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setUI()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func setUI() {
-        view.backgroundColor = .lightGray
-        view.addSubview(mainStackView)
-        view.addSubview(calculateButton)
+        heightTextField.delegate = self
+        weightTextField.delegate = self
+        backgroundColor = .lightGray
+        addSubview(mainStackView)
+        addSubview(calculateButton)
         
         mainLabel.translatesAutoresizingMaskIntoConstraints = false
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -126,9 +126,9 @@ final class ViewController: UIViewController {
         calculateButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 130),
-            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            mainStackView.topAnchor.constraint(equalTo: topAnchor, constant: 130),
+            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             mainStackView.heightAnchor.constraint(equalToConstant: (viewHeight * 3) + 40),
             
             
@@ -136,34 +136,15 @@ final class ViewController: UIViewController {
             weightLabel.widthAnchor.constraint(equalToConstant: 70),
             
             
-            calculateButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            calculateButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            calculateButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            calculateButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            calculateButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            calculateButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -30),
             calculateButton.heightAnchor.constraint(equalToConstant: 45),
         ])
     }
-
-    @objc func calculateButtonTapped() {
-        let nextVC = CalculatedViewController()
-        
-        guard let h = heightTextField.text, let w = weightTextField.text else {return}
-        guard let h2 = Int(h), let w2 = Int(w) else {return}
-        print(h2,w2)
-        nextVC.bmi = Float(bmiCalculate(height: h2, weight: w2))
-
-        nextVC.modalPresentationStyle = .fullScreen
-        present(nextVC, animated: true)
-    }
-    
-    func bmiCalculate(height: Int, weight: Int) -> Float {
-        let h = Float(height) / 100
-        print(h)
-        return Float(weight) / (h * h)
-    }
-    
 }
 
-extension ViewController: UITextFieldDelegate {
+extension FirstView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
        if textField == heightTextField {
           textField.resignFirstResponder()
@@ -175,4 +156,3 @@ extension ViewController: UITextFieldDelegate {
      }
     
 }
-
